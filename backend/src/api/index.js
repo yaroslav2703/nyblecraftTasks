@@ -13,6 +13,7 @@ app.use(bp.json());
 doMigrations();
 
 const routes = express.Router();
+require('./users')(routes);
 app.use('/api', routes);
 
 module.exports = app;

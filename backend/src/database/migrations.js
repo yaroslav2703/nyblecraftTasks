@@ -1,4 +1,4 @@
-const database = require('./databaseInit');
+const database = require('./database');
 const user = require('./models/user');
 
 

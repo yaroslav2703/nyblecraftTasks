@@ -1,5 +1,5 @@
 const Sequelize = require('sequelize');
-const database = require('../databaseInit');
+const database = require('../database');
 
 const User = database.define('user', {
     id: {
@@ -17,11 +17,11 @@ const User = database.define('user', {
         allowNull: false
     },
     image: {
-        type: Sequelize.STRING(255).BINARY,
+        type: Sequelize.BLOB('long'),
         allowNull: true
     },
     pdf: {
-        type: Sequelize.STRING(255).BINARY,
+        type: Sequelize.BLOB('long'),
         allowNull: true
     }
 });

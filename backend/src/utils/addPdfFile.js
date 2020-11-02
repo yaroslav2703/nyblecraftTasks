@@ -1,20 +1,17 @@
-const pdfMakePrinter = require('pdfmake/src/printer');
 const fs = require('fs');
 
 const generatePdf = require('./callGeneratePdf');
 
 
 module.exports = (model, obj) => {
-    const  docDefinition  =  {
-        content : [ `firstName: ${obj.firstName}; lastName: ${obj.lastName}; image: ${obj.image};` ]
-    } ;
 
-    generatePdf(model, obj, docDefinition, (response, doc) => {
+    generatePdf(obj, (response) => {
         console.log(response);
+        const pdfData = fs.readFileSync(`store/pdf/${obj.firstName}${obj.lastName}.pdf`);
 
         model.update(
             {
-                pdf: doc
+                pdf: pdfData
             },
             {
                 where: {

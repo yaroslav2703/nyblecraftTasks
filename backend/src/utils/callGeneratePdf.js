@@ -1,32 +1,19 @@
-const pdfMakePrinter = require('pdfmake/src/printer');
+const pdf = require('html-pdf');
 const fs = require('fs');
 
+const pdfTemplate = require('../../store/template');
 
-module.exports = (model, obj, docDefinition, successCallback, errorCallback) => {
+
+module.exports = (obj, successCallback, errorCallback) => {
     try {
-        const fontDescriptors = {
-            Roboto: {
-                normal: 'fonts/Roboto-Regular.ttf',
-                bold: 'fonts/Roboto-Medium.ttf',
-                italics:  'fonts/Roboto-Italic.ttf',
-                bolditalics: 'fonts/Roboto-MediumItalic.ttf'
+        pdf.create(pdfTemplate(obj.firstName, obj.lastName, null)).toFile(`store/pdf/${obj.firstName}${obj.lastName}.pdf`, (err) => {
+            if(err) {
+                errorCallback('Ошибка создания pdf-файла!');
+                return
             }
-        };
-        const printer = new pdfMakePrinter(fontDescriptors);
-        const doc = printer.createPdfKitDocument(docDefinition);
+            successCallback('Файл успешно создан!')
 
-        doc.pipe(
-            fs.createWriteStream(`store/${obj.firstName}${obj.lastName}${obj.image}.pdf`).on("error", (err) => {
-                errorCallback(err.message);
-            })
-        );
-
-        doc.on('end', () => {
-            successCallback("PDF successfully created and stored", doc);
         });
-
-        doc.end();
-
     } catch(err) {
         throw(err);
     }

@@ -7,7 +7,7 @@
             <Preloader/>
         </div>
         <div v-else>
-            <Toolbar></Toolbar>
+            <Toolbar @filter="filterTable"></Toolbar>
             <div style="overflow-y:scroll; overflow-x:hidden; height: 500px">
                 <Table  v-bind:notes="notes"></Table>
             </div>
@@ -21,6 +21,7 @@
     import Preloader from "../components/Preloader";
     import requests from "../utils/requests";
 
+
     export default {
         name: "Notes",
         data: () => ({
@@ -30,10 +31,15 @@
         components: {
             Table, Preloader, Toolbar
         },
-        async mounted() {
+        mounted() {
             this.notes = requests.getNotes();
             this.showPreloader = false
         },
+        methods: {
+            async filterTable(notes) {
+                this.notes = notes;
+            }
+        }
     }
 </script>
 

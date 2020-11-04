@@ -19,7 +19,7 @@
                                 <textarea id="textarea2"
                                           class="materialize-textarea lime lighten-4" data-length="10"
                                           style="height: 200px"
-                                          v-model.trim="text">
+                                          v-model.trim="note.text">
                                 </textarea>
                             </div>
                         </div>
@@ -34,24 +34,25 @@
 <script>
     import requests from "../../utils/requests";
 
+
     export default {
         name: "EditNote",
         data : () => ({
-            id: null,
             note: null,
-            text: ""
         }),
         async mounted() {
-            this.id =  this.$route.params.id;
-            this.note = requests.getNote(this.id);
-            this.text = this.note.text;
-            $(document).ready(function() {
-                $('input#input_text, textarea#textarea2').characterCounter();
-            });
+
+        },
+        async created() {
+            const id = this.$route.params.id;
+            const response = requests.getNote(id);
+            if(response != null){
+                this.note = response;
+            }
         },
         methods: {
             async submitHandler() {
-                 requests.editNote(this.id, this.text);
+                 requests.editNote(this.note.id, this.note.text);
                 await this.$router.push("/")
             }
         }

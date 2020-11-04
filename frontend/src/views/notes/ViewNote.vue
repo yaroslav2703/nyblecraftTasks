@@ -6,20 +6,8 @@
                     <div class="page-title">
                         <h3>{{note.title}}</h3>
                     </div>
-                    <div class="row">
-                        <div class="col s12 m12 l12">
-                            <router-link :to="{ name: 'note-edit', params: { id: note.id }}" class="white-text">
-                                <button class="btn waves-effect waves-light blue darken-2" type="button">
-                                    Изменить
-                                    <i class="material-icons right">edit</i>
-                                </button>
-                            </router-link>
-                            <button class="btn waves-effect waves-light blue darken-2" type="button" @click="deleteHandler(note.id)">
-                                Удалить
-                                <i class="material-icons right">clear</i>
-                            </button>
-                        </div>
-                    </div>
+                   <Toolbar v-bind:id="note.id"></Toolbar>
+                    <div class="chips chips-placeholder"></div>
                     <div class="card-panel lime lighten-4">
                         <span class="black-text">
                            {{note.text}}
@@ -32,22 +20,51 @@
 </template>
 
 <script>
+    import Toolbar from "../../components/notes/ToolbarView";
     import requests from "../../utils/requests";
 
     export default {
         name: "ViewNote",
         data : () => ({
-            id: null,
-            note: null
+            note: null,
+            tags: []
         }),
-        async mounted() {
-            this.id =  this.$route.params.id;
-            this.note = requests.getNote(this.id)
+        components: {
+            Toolbar
+        },
+        mounted() {
+            $('.chips-placeholder').chips({
+                data: requests.getNoteTags(this.$route.params.id),
+                placeholder: 'Введите тег',
+                secondaryPlaceholder: '+ Тег',
+                onChipDelete: () => {
+                    this.saveStateTags()
+                },
+                onChipAdd: () => {
+                    this.saveStateTags()
+                }
+            });
+
+        },
+        created() {
+            const id = this.$route.params.id;
+            const response = requests.getNote(id);
+            if(response != null){
+                this.note = response;
+                this.tags = response.tags;
+            }
         },
         methods: {
-            async deleteHandler(id) {
-                requests.deleteNote(id);
-                await this.$router.push('/')
+            saveStateTags(){
+                const tags = [];
+                for(let item of document.querySelectorAll('.chip')){
+                    let tag = item.innerText;
+                    const index = item.innerText.indexOf('\n');
+                    tag = tag.slice(0, index);
+                    tags.push(tag);
+                }
+                this.tags = tags;
+                requests.addNoteTag(this.note.id, this.tags);
             }
         }
     }

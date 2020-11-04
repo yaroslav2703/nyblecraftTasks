@@ -2,13 +2,13 @@
     <div>
         <ul class="collection">
             <li class="collection-item" v-for="note in notes" :key="note.id">
-                <router-link :to="{ name: 'note-view', params: { id: note.id }}" class="blue-darken-text title" >
-                    <i class="material-icons right">note</i>
-                    <h6>
+                <i class="material-icons right">note</i>
+                <h6>
+                    <router-link :to="{ name: 'note-view', params: { id: note.id }}" class="blue-darken-text title" >
                         {{note.title}}
-                    </h6>
-                    <div>...</div>
-                </router-link>
+                    </router-link>
+                </h6>
+                <div>...</div>
             </li>
         </ul>
     </div>

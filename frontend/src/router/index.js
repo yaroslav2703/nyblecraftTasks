@@ -15,11 +15,6 @@ const routes = [
       component: () => import('../views/Notes.vue')
     },
     {
-         path: '/tags',
-         name: 'tags',
-         component: () => import('../views/Tags.vue')
-    },
-    {
          path: '/note/view/:id',
          name: 'note-view',
          component: () => import('../views/notes/ViewNote.vue')

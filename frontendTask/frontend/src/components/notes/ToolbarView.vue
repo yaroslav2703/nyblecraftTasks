@@ -27,8 +27,17 @@
         props: ['id'],
         methods: {
             async deleteHandler(id) {
-                requests.deleteNote(id);
-                await this.$router.push('/')
+                const formData = {
+                    id: id
+                };
+                try{
+                    const response = await requests.request('/api/notes/deleteById', 'POST', formData);
+                    if (response.message === 'successfully'){
+                        await this.$router.push('/')
+                    }
+                } catch (e) {
+                    console.log(e.message)
+                }
             }
         }
     }

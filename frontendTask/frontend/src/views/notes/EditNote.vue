@@ -4,7 +4,7 @@
             <div class="row">
                 <div class="col s12 m12 l12">
                     <div class="page-title">
-                        <h3>{{note.title}}</h3>
+                        <h3>{{title}}</h3>
                     </div>
                     <div class="row">
                     <form class="col s12" @submit.prevent="submitHandler">
@@ -19,7 +19,7 @@
                                 <textarea id="textarea2"
                                           class="materialize-textarea lime lighten-4" data-length="10"
                                           style="height: 200px"
-                                          v-model.trim="note.text">
+                                          v-model.trim="text">
                                 </textarea>
                             </div>
                         </div>
@@ -38,22 +38,42 @@
     export default {
         name: "EditNote",
         data : () => ({
-            note: null,
+            id: null,
+            title: '',
+            text: ''
         }),
         async mounted() {
 
         },
         async created() {
-            const id = this.$route.params.id;
-            const response = requests.getNote(id);
-            if(response != null){
-                this.note = response;
+            const formData = {
+                id: this.$route.params.id
+            };
+            try{
+                const response = await requests.request('/api/notes/getById', 'POST', formData);
+                if (response.message === 'successfully'){
+                    this.id = response.note.id;
+                    this.title = response.note.title;
+                    this.text = response.note.text;
+                }
+            } catch (e) {
+                console.log(e.message)
             }
         },
         methods: {
             async submitHandler() {
-                 requests.editNote(this.note.id, this.note.text);
-                await this.$router.push("/")
+                const formData = {
+                    id: this.id,
+                    text: this.text
+                };
+                try{
+                    const response = await requests.request('/api/notes/editById', 'POST', formData);
+                    if (response.message === 'successfully'){
+                        await this.$router.push("/");
+                    }
+                } catch (e) {
+                    console.log(e.message)
+                }
             }
         }
     }

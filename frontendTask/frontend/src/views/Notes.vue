@@ -31,9 +31,16 @@
         components: {
             Table, Preloader, Toolbar
         },
-        mounted() {
-            this.notes = requests.getNotes();
-            this.showPreloader = false
+        async mounted() {
+            try{
+                const response = await requests.request('/api/notes/get');
+                if (response.message === 'successfully'){
+                    this.notes = response.notes;
+                    this.showPreloader = false
+                }
+            } catch (e) {
+                console.log(e.message)
+            }
         },
         methods: {
             async filterTable(notes) {

@@ -44,10 +44,24 @@
             async submitHandler() {
                 let notes = null;
                 if(this.title === ''){
-                    notes = requests.getNotes();
+                    try{
+                        const response = await requests.request('/api/notes/get');
+                        if (response.message === 'successfully'){
+                            notes = response.notes;
+                        }
+                    } catch (e) {
+                        console.log(e.message)
+                    }
                 }
                 else{
-                    notes = requests.filterNoteTag(this.title);
+                    try{
+                        const response = await requests.request('/api/notes/filterNoteTags', 'POST', {tag: this.title});
+                        if (response.message === 'successfully'){
+                            notes = response.notes;
+                        }
+                    } catch (e) {
+                        console.log(e.message)
+                    }
                 }
                 this.$emit('filter', notes);
             }

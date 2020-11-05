@@ -56,14 +56,17 @@
         methods: {
             async submitHandler() {
                 const obj = {
-                    id: null,
                     title: this.title,
-                    text: this.text,
-                    tags: []
-
+                    text: this.text
                 };
-                requests.addNote(obj)
-                await this.$router.push('/')
+                try{
+                    const response = await requests.request('/api/notes/add', 'POST', obj);
+                    if (response.message === 'successfully'){
+                        await this.$router.push('/')
+                    }
+                } catch (e) {
+                    console.log(e.message)
+                }
             }
         }
     }

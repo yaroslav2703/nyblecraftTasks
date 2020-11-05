@@ -3,5 +3,6 @@
 /frontendTask/backend/node_modules/
 /frontendTask/backend/package-lock.json
 /frontendTask/frontend/node_modules/
+/frontendTask/frontend/package-lock.json
 /frontendTask/frontend/dist
 .idea

@@ -47,8 +47,8 @@
                     this.tags = response.note.tags;
                     $('.chips-placeholder').chips({
                         data: await requests.getNoteTags(this.id),
-                        placeholder: 'Введите тег',
-                        secondaryPlaceholder: '+ Тег',
+                        placeholder: 'Введите тег через знак #',
+                        secondaryPlaceholder: '+ #тег',
                         onChipDelete: () => {
                             this.saveStateTags()
                         },
@@ -68,7 +68,11 @@
                     let tag = item.innerText;
                     const index = item.innerText.indexOf('\n');
                     tag = tag.slice(0, index);
-                    tags.push(tag);
+                    let firstTagSymbol = tag.slice(0, 1);
+                    if(firstTagSymbol === '#'){
+                        tags.push(tag);
+                    }
+
                 }
                 const formData = {
                     id: this.id,

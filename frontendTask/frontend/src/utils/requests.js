@@ -25,14 +25,12 @@ export default {
         const response = await this.request('/api/notes/getById', 'POST', {id:id});
         if (response.message === 'successfully'){
             const tags = response.note.tags;
-            console.log(tags);
             let objTags = [];
             for(let item of tags){
                 objTags.push({
                     tag: item
                 });
             }
-            console.log(objTags);
             return objTags;
         }
 

@@ -9,7 +9,10 @@ const sequelize = new Sequelize(
     {
         dialect: config.database.dialect,
         host: config.database.host,
-        port: config.database.port
+        port: config.database.port,
+        define: {
+            timestamps: false
+        }
     }
 );
 

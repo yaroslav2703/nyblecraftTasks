@@ -5,6 +5,6 @@ module.exports = {
         password: 'root',
         dialect: 'mysql',
         host: 'localhost',
-        port: '3307'
+        port: '3307' // обычно 3306
     }
 };

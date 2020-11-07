@@ -1,3 +1,3 @@
 module.exports = (app) => {
-    app.post('/users/get_one', require('./usersGetOne'));
+    app.post('/users/getOne', require('./usersGetOne'));
 };

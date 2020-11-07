@@ -9,7 +9,6 @@ module.exports = (obj, successCallback, errorCallback) => {
 
         fs.writeFile(`store/img/${obj.firstName}${obj.lastName}.jpg`, obj.image, (error) => {
             if(error) throw error; // если возникла ошибка
-            console.log("Асинхронная запись файла завершена. Содержимое файла:");
         });
 
         const imageUrl = `${obj.firstName}${obj.lastName}.jpg`;

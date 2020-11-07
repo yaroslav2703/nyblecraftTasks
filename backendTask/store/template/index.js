@@ -1,5 +1,4 @@
 module.exports = (firstName, lastName, imageUrl) => {
-
     return `
         <!doctype html>
         <html>
@@ -51,7 +50,7 @@ module.exports = (firstName, lastName, imageUrl) => {
                      </tr>
                      <tr class="information">
                          <td>
-                           Image: <img src="file:///D:/nbsoft/backend/store/img/${imageUrl}" width="100px" height="100px" alt="нет фото">
+                           Image: <img src="file:///D:/nbsoft/backendTask/store/img/${imageUrl}" width="100px" height="100px" alt="нет фото">
                          </td>
                      </tr>
                  </table>

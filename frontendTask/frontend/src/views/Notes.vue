@@ -8,7 +8,7 @@
         </div>
         <div v-else>
             <Toolbar @filter="filterTable"></Toolbar>
-            <div style="overflow-y:scroll; overflow-x:hidden; height: 500px">
+            <div style="overflow-y:scroll; overflow-x:hidden; height: 400px">
                 <Table  v-bind:notes="notes"></Table>
             </div>
         </div>

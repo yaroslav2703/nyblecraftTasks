@@ -47,7 +47,7 @@
                     this.tags = response.note.tags;
                     $('.chips-placeholder').chips({
                         data: await requests.getNoteTags(this.id),
-                        placeholder: 'Введите тег через знак #',
+                        placeholder: 'Введите тег #',
                         secondaryPlaceholder: '+ #тег',
                         onChipDelete: () => {
                             this.saveStateTags()

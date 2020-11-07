@@ -6,27 +6,30 @@
                     <div class="page-title">
                         <h3>{{title}}</h3>
                     </div>
-                    <div class="row">
-                    <form class="col s12" @submit.prevent="submitHandler">
-                        <div class="col s12 m12 l12">
-                            <button class="btn waves-effect waves-light blue darken-2 white-text" type="submit">
-                                Сохранить
-                                <i class="material-icons right">save</i>
-                            </button>
-                        </div>
                         <div class="row">
-                            <div class="input-field col s12">
-                                <textarea id="textarea2"
-                                          class="materialize-textarea lime lighten-4" data-length="10"
-                                          style="height: 200px"
-                                          v-model.trim="modText"
-                                @input.prevent="inputHandler">
-                                </textarea>
-                                <div class="chips chips-placeholder"></div>
+                        <form class="col s12" @submit.prevent="submitHandler">
+                            <div class="col s12 m12 l12">
+                                <button class="btn waves-effect waves-light blue darken-2 white-text" type="submit">
+                                    Сохранить
+                                    <i class="material-icons right">save</i>
+                                </button>
                             </div>
-                        </div>
-                    </form>
-                </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <div id="textarea2"
+                                         contentEditable="true"
+                                         class="lime lighten-4" data-length="10"
+                                         style="height: 200px"
+                                         ref="content"
+                                         @focus="focusHandler"
+                                         @input="inputHandler"
+                                    >
+                                    </div>
+                                    <div class="chips chips-placeholder"></div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -63,20 +66,9 @@
                     this.text = response.note.text;
                     this.tags = response.note.tags;
                     this.modText = this.text;
-                    for(let item of this.tags){
-                        let pos = 0;
-                        while (true) {
-                            let foundPos = this.modText.indexOf(item, pos);
-                            if (foundPos === -1) break;
-                            let len = item.length;
-                            let subString = this.modText.slice(foundPos, foundPos+len);
-                           // this.modText = this.modText.replace(subString, '<b>' + subString + '</b>');
-                            pos = foundPos + 1; // продолжаем со следующей позиции
-                        }
-                    }
                     $('.chips-placeholder').chips({
                         data: await requests.getNoteTags(this.id),
-                        placeholder: 'Введите тег через знак #',
+                        placeholder: 'Введите тег #',
                         secondaryPlaceholder: '+ #тег',
                         onChipDelete: () => {
                             this.saveStateTags()
@@ -85,6 +77,7 @@
                             this.saveStateTags()
                         }
                     });
+                    this.$refs.content.textContent = this.modText;
                 }
             } catch (e) {
                 console.log(e.message)
@@ -117,6 +110,7 @@
                 }
             },
             async submitHandler() {
+                this.modText = this.$refs.content.textContent;
                 const formData = {
                     id: this.id,
                     text: this.modText
@@ -130,7 +124,33 @@
                     console.log(e.message)
                 }
             },
+            async focusHandler(){
+                let array = [];
+                let val = (this.modText).split(' ');
+                for (let i = 0; i < val.length; i++) {
+                    if (val[i].charAt(0) === "\n") {
+                        val[i] = val[i].slice(1, val[i].length)
+                    }
+                }
+                for (let i = 0; i < val.length; i++) {
+                    if (val[i].charAt(0) === "#") {
+                        array.push(val[i]);
+                    }
+                }
+                let result = [];
+
+                for (let str of array) {
+                    if (!result.includes(str)) {
+                        result.push(str);
+                    }
+                }
+                array = result;
+                this.$refs.content.innerHTML = this.$refs.content.textContent.split(' ').map(word => {
+                    return array.includes(word) ? `<b>${word}</b>` : word;
+                }).join(' ');
+            },
             async inputHandler() {
+                this.modText = this.$refs.content.textContent;
                 let array = [];
                 let val = (this.modText).split(' ');
                 for (let i = 0; i < val.length; i++) {
@@ -170,7 +190,6 @@
                     id: this.id,
                     tags: this.tags
                 };
-                console.log(this.tags);
                 try{
                     const response = await requests.request('/api/notes/editTagsById', 'POST', formData);
                     if (response.message === 'successfully'){
